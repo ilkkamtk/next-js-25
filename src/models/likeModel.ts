@@ -15,6 +15,7 @@ const fetchAllLikes = async (): Promise<Like[]> => {
 
 // Request a list of likes by media item id
 const fetchLikesByMediaId = async (id: number): Promise<Like[]> => {
+  console.log('SELECT * FROM Likes WHERE media_id = ' + id);
   const [rows] = await promisePool.execute<RowDataPacket[] & Like[]>(
     'SELECT * FROM Likes WHERE media_id = ?',
     [id],
@@ -79,6 +80,8 @@ const deleteLike = async (
   const params = user_level === 'Admin' ? [like_id] : [like_id, user_id];
 
   const [result] = await promisePool.execute<ResultSetHeader>(sql, params);
+
+  console.log('seppo', result, sql, params);
 
   if (result.affectedRows === 0) {
     throw new CustomError(ERROR_MESSAGES.LIKE.NOT_DELETED, 400);

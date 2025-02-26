@@ -1,5 +1,5 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
-import { Rating, UserLevel } from 'hybrid-types/DBTypes';
+import { Rating } from 'hybrid-types/DBTypes';
 import promisePool from '@/lib/db';
 import { MessageResponse } from 'hybrid-types/MessageTypes';
 import { ERROR_MESSAGES } from '@/utils/errorMessages';
@@ -98,16 +98,11 @@ const postRating = async (
 const deleteRating = async (
   media_id: number,
   user_id: number,
-  level_name: UserLevel['level_name'],
 ): Promise<MessageResponse> => {
-  let sql = '';
-  if (level_name === 'Admin') {
-    sql = 'DELETE FROM Ratings WHERE rating_id = ?';
-  } else {
-    sql = 'DELETE FROM Ratings WHERE rating_id = ? AND user_id = ?';
-  }
+  const sql = 'DELETE FROM Ratings WHERE media_id  = ? AND user_id = ?';
 
-  const params = level_name === 'Admin' ? [media_id] : [media_id, user_id];
+  const params = [media_id, user_id];
+
   const [result] = await promisePool.execute<ResultSetHeader>(sql, params);
 
   if (result.affectedRows === 0) {

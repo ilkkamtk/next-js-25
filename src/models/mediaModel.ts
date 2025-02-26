@@ -109,6 +109,7 @@ const putMedia = async (
       : [media.title, media.description, id, user_id];
 
   const stmt = promisePool.format(sql, params);
+
   const [result] = await promisePool.execute<ResultSetHeader>(stmt);
 
   if (result.affectedRows === 0) {
@@ -190,7 +191,7 @@ const deleteMedia = async (
   await connection.commit();
 
   return {
-    message: 'Media deleted',
+    message: 'Media item deleted',
   };
 };
 
